@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0a121c">
+<title>流光贪吃蛇 · 大模型实践</title>
+<style>
+:root{color-scheme:dark;--mint:#a7f3ce;--muted:#809397;--line:#ffffff12}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 15% 5%,#163d3c80,transparent 48%),radial-gradient(ellipse at 90% 90%,#2a234b66,transparent 50%),#0a121c;color:#e8f3ee;font-family:system-ui,"Microsoft YaHei",sans-serif}button{font:inherit;cursor:pointer}button:focus-visible{outline:2px solid #ffcf8b;outline-offset:5px}main{max-width:1080px;margin:auto;padding:38px 28px 24px}header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:24px}.brand{font-size:14px;letter-spacing:3px}.brand b{color:var(--mint);margin-right:12px}.tag{font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:30px;padding:8px 13px}.intro{margin:35px 0 26px;display:flex;align-items:end;justify-content:space-between}h1{font-size:clamp(32px,5vw,48px);letter-spacing:3px;margin:7px 0 10px;font-weight:650}.eyebrow{font-size:11px;color:var(--mint);letter-spacing:3px}.intro p{margin:0;color:#91a6a6;font-size:14px}.number{font-size:56px;color:#ffffff0c;font-weight:800}.layout{display:grid;grid-template-columns:minmax(0,1fr) 270px;gap:26px}.arena{position:relative;border:1px solid #a7f3ce26;border-radius:20px;padding:14px;background:#101f29b3;box-shadow:0 24px 90px #0005;overflow:hidden}.arena-top{display:flex;justify-content:space-between;font-size:11px;color:#8ca7a0;letter-spacing:2px;padding:1px 4px 13px}.dot{display:inline-block;width:6px;height:6px;background:var(--mint);border-radius:50%;box-shadow:0 0 10px var(--mint);margin-right:7px}canvas{display:block;width:100%;aspect-ratio:1;background:#09151d;border-radius:10px}.overlay{position:absolute;inset:42px 14px 14px;display:grid;place-items:center;text-align:center;background:#08141caa;backdrop-filter:blur(5px);border-radius:10px}.overlay[hidden]{display:none}.symbol{font-size:44px;color:var(--mint);margin-bottom:16px;text-shadow:0 0 28px #a7f3ce66}.overlay h2{font-size:29px;margin:0 0 12px}.overlay p{font-size:13px;color:#a4b8b4;line-height:1.9;margin:0 15px 25px}.primary{background:var(--mint);color:#10291f;border:0;padding:13px 30px;border-radius:9px;font-weight:700;box-shadow:0 6px 24px #a7f3ce15}.primary:hover{background:#c5ffdf}.hint{display:block;font-size:11px;margin-top:15px;color:#8da5a0}aside{display:flex;flex-direction:column;gap:16px}.card{border:1px solid var(--line);border-radius:16px;background:#ffffff03;padding:22px}.label{font-size:12px;color:#91a6a6;letter-spacing:1px}.score{font-size:46px;font-weight:600;margin:8px 0 16px;font-variant-numeric:tabular-nums;line-height:1}.record{display:flex;justify-content:space-between;border-top:1px solid var(--line);padding-top:16px;font-size:13px;color:#91a6a6}.record strong{color:#e8ce98;font-variant-numeric:tabular-nums}.level{display:flex;justify-content:space-between;margin:13px 0;color:var(--mint);font-size:14px}.track{height:4px;background:#ffffff0c;border-radius:4px;overflow:hidden}.track span{display:block;height:100%;background:linear-gradient(90deg,#6aaf96,#b3f6d3);transition:width .3s}.small{font-size:12px;color:var(--muted);line-height:1.8;margin:12px 0 0}h3{font-size:13px;font-weight:500;margin:0 0 16px}.control{display:flex;justify-content:space-between;align-items:center;margin-top:12px;color:#91a6a6;font-size:12px}kbd{font:11px system-ui;border:1px solid #ffffff20;border-bottom-width:2px;padding:4px 7px;border-radius:5px;color:#c7d6d2}.actions{display:flex;gap:8px}.secondary{flex:1;border:1px solid #ffffff19;background:#ffffff05;color:#b9ccc5;padding:11px 5px;border-radius:8px;font-size:12px}.secondary:hover{background:#ffffff0c}.dpad{display:none;text-align:center}.dpad button{width:48px;height:42px;margin:3px;touch-action:manipulation}footer{display:flex;justify-content:space-between;margin-top:25px;font-size:11px;color:#607b7d;letter-spacing:1px}#storage{color:#e8ce98}@media(max-width:760px){main{padding:20px 16px}.tag{display:none}.intro{margin:26px 0 22px}.number{font-size:42px}.layout{grid-template-columns:1fr;gap:18px}aside{display:grid;grid-template-columns:1fr 1fr;gap:12px}.card{padding:16px}.instructions{grid-column:1/-1}.instructions .control{display:inline-flex;gap:10px;margin-right:15px}.score{font-size:34px}.dpad{display:block;grid-column:1/-1}footer{font-size:10px;letter-spacing:0}.arena{padding:10px}.overlay{inset:38px 10px 10px}}@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+<header><div class="brand"><b>◈</b>大模型实践</div><span class="tag">实验 001 / 经典新生</span></header>
+<section class="intro"><div><span class="eyebrow">跟随本能，追逐流光</span><h1>流光贪吃蛇</h1><p>一颗能量，一次生长。看看你能走多远。</p></div><span class="number" aria-hidden="true">01</span></section>
+<div class="layout">
+<section class="arena" aria-label="游戏区域"><div class="arena-top"><span><i class="dot"></i><span id="status">准备就绪</span></span><span>20 × 20</span></div><canvas id="board" width="600" height="600" aria-label="贪吃蛇棋盘，使用方向键或 WASD 操作"></canvas><div class="overlay" id="overlay"><div><div class="symbol" aria-hidden="true">◈</div><h2 id="title">准备追光？</h2><p id="message">收集金色能量，让流光不断延伸。<br>避开边界，也别撞到自己。</p><button class="primary" id="play">开始游戏 →</button><span class="hint" id="hint">按空格键也可开始</span></div></div></section>
+<aside>
+<div class="card"><div class="label">本局得分</div><div class="score" id="score" aria-live="polite">000</div><div class="record"><span>♛ 历史最高</span><strong id="best">000</strong></div><p class="small" id="storage" hidden>浏览器未允许保存，最高分仅在本次打开期间保留。</p></div>
+<div class="card"><div class="label">当前等级</div><div class="level"><strong id="level">01</strong><span id="speed">悠然起步</span></div><div class="track"><span id="progress" style="width:0%"></span></div><p class="small" id="next">再收集 5 颗能量提升速度</p></div>
+<div class="card instructions"><h3>掌握你的节奏</h3><div class="control"><span>移动</span><span><kbd>↑ ↓ ← →</kbd> / <kbd>WASD</kbd></span></div><div class="control"><span>暂停 / 继续</span><kbd>空格 / P</kbd></div><div class="control"><span>重新开始</span><kbd>R</kbd></div><p class="small">每颗能量 +10 分，每 5 颗提速。<br>离开窗口时自动暂停，回来再继续。</p></div>
+<div class="actions"><button class="secondary" id="pause">暂停 / 继续</button><button class="secondary" id="restart">↻ 重新开始</button></div>
+<div class="dpad" aria-label="触屏方向控制"><button class="secondary" data-dir="up" aria-label="向上">↑</button><div><button class="secondary" data-dir="left" aria-label="向左">←</button><button class="secondary" data-dir="down" aria-label="向下">↓</button><button class="secondary" data-dir="right" aria-label="向右">→</button></div></div>
+</aside>
+</div>
+<footer><span>用灵感写代码，用游戏认识大模型。</span><span>无需联网 · 即开即玩</span></footer>
+</main>
+<script>
+'use strict';
+// 游戏采用固定逻辑步长，绘制独立运行，避免帧率影响速度。
+const $ = id => document.getElementById(id);
+const canvas = $('board'), ctx = canvas.getContext('2d');
+const SIZE = 20, CELL = 30, KEY = 'llm-practice.neon-snake.best.v1';
+const directions = {up:{x:0,y:-1},down:{x:0,y:1},left:{x:-1,y:0},right:{x:1,y:0}};
+let snake, direction, queue, food, score, best = 0, state = 'ready', particles = [], accumulator = 0, last = 0;
+const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+try { const stored = Number(localStorage.getItem(KEY)); best = Number.isSafeInteger(stored) && stored >= 0 ? stored : 0; }
+catch { $('storage').hidden = false; }
+function level() { return Math.min(10, 1 + Math.floor(score / 50)); }
+function interval() { return 170 - (level() - 1) * 12; }
+function updateUI() {
+  $('score').textContent = String(score).padStart(3,'0');
+  $('best').textContent = String(best).padStart(3,'0');
+  $('level').textContent = String(level()).padStart(2,'0');
+  $('speed').textContent = level() < 4 ? '悠然起步' : level() < 7 ? '渐入佳境' : '极速追光';
+  $('progress').style.width = level() === 10 ? '100%' : (score % 50) * 2 + '%';
+  $('next').textContent = level() === 10 ? '已达最高速度，挑战你的极限' : `再收集 ${5 - score / 10 % 5} 颗能量提升速度`;
+}
+function spawnFood() {
+  // 从空格中均匀抽取，棋盘接近填满时也不会陷入随机重试。
+  const empty = [];
+  for(let y=0;y<SIZE;y++) for(let x=0;x<SIZE;x++) if(!snake.some(p=>p.x===x && p.y===y)) empty.push({x,y});
+  food = empty.length ? empty[Math.floor(Math.random()*empty.length)] : null;
+}
+function reset() {
+  snake = [{x:9,y:10},{x:8,y:10},{x:7,y:10},{x:6,y:10}];
+  direction = directions.right; queue = []; score = 0; particles = []; accumulator = 0;
+  spawnFood(); updateUI();
+}
+function start() { reset(); state = 'running'; $('overlay').hidden = true; $('status').textContent = '追光进行中'; }
+function showOverlay(title, message, button) {
+  $('title').textContent = title; $('message').textContent = message; $('play').textContent = button;
+  $('hint').textContent = state === 'paused' ? '按空格键继续' : '按空格键再来一局'; $('overlay').hidden = false;
+}
+function togglePause() {
+  if(state === 'running') { state = 'paused'; accumulator = 0; $('status').textContent = '已暂停'; showOverlay('稍作停留','深呼吸，下一颗流光正在等你。','继续追光 →'); }
+  else if(state === 'paused') { state = 'running'; accumulator = 0; $('overlay').hidden = true; $('status').textContent = '追光进行中'; }
+}
+function finish(won=false) {
+  state = 'over'; $('status').textContent = won ? '完美通关' : '本局结束';
+  showOverlay(won ? '点亮整个宇宙！' : '这段流光，值得记住', `本局 ${score} 分 · 历史最高 ${best} 分`, '再来一局 →');
+}
+function turn(name) {
+  if(state !== 'running' || queue.length >= 2) return;
+  const next = directions[name], previous = queue.length ? queue[queue.length-1] : direction;
+  // 最多缓冲两个有效转向；既不吞掉快速拐弯，也不能在一步内掉头。
+  if(next.x === previous.x && next.y === previous.y || next.x === -previous.x && next.y === -previous.y) return;
+  queue.push(next);
+}
+function step() {
+  if(queue.length) direction = queue.shift();
+  const head = {x:snake[0].x+direction.x,y:snake[0].y+direction.y};
+  const eating = food && head.x === food.x && head.y === food.y;
+  // 非进食回合尾巴同时移走，因此允许进入尾巴原来的格子。
+  const body = eating ? snake : snake.slice(0,-1);
+  if(head.x<0 || head.y<0 || head.x>=SIZE || head.y>=SIZE || body.some(p=>p.x===head.x && p.y===head.y)) { finish(); return; }
+  snake.unshift(head);
+  if(eating) {
+    score += 10;
+    if(!reducedMotion) for(let i=0;i<18;i++) { const a=Math.random()*Math.PI*2; particles.push({x:(food.x+.5)*CELL,y:(food.y+.5)*CELL,vx:Math.cos(a)*90,vy:Math.sin(a)*90,life:1}); }
+    if(score > best) { best = score; try { localStorage.setItem(KEY,String(best)); } catch { $('storage').hidden = false; } }
+    updateUI(); spawnFood(); if(!food) finish(true);
+  } else snake.pop();
+}
+function rounded(x,y,w,h,r) { ctx.beginPath(); ctx.roundRect(x,y,w,h,r); ctx.fill(); }
+function draw(time,dt) {
+  ctx.clearRect(0,0,600,600);
+  ctx.strokeStyle='#a7f3ce08'; ctx.lineWidth=1;
+  for(let i=1;i<SIZE;i++) { ctx.beginPath();ctx.moveTo(i*CELL,0);ctx.lineTo(i*CELL,600);ctx.moveTo(0,i*CELL);ctx.lineTo(600,i*CELL);ctx.stroke(); }
+  if(food) {
+    const x=(food.x+.5)*CELL,y=(food.y+.5)*CELL,pulse=reducedMotion ? 1 : 1+Math.sin(time/260)*.13;
+    const glow=ctx.createRadialGradient(x,y,0,x,y,29);glow.addColorStop(0,'#ffca7250');glow.addColorStop(1,'#ffca7200');ctx.fillStyle=glow;ctx.fillRect(x-30,y-30,60,60);
+    ctx.save();ctx.translate(x,y);ctx.rotate(Math.PI/4);ctx.fillStyle='#ffce89';ctx.shadowColor='#ffd492';ctx.shadowBlur=16;rounded(-6*pulse,-6*pulse,12*pulse,12*pulse,3);ctx.restore();
+  }
+  snake.forEach((p,i)=>{ctx.fillStyle=i===0?'#d3ffe6':`hsl(${153+i*.22} 48% ${Math.max(28,65-i*1.3)}%)`;ctx.shadowColor='#8ef4be';ctx.shadowBlur=i===0?16:0;rounded(p.x*CELL+2,p.y*CELL+2,26,26,i===0?9:6);});ctx.shadowBlur=0;
+  const h=snake[0],cx=(h.x+.5)*CELL,cy=(h.y+.5)*CELL;
+  ctx.fillStyle='#15382a';for(const side of [-1,1]) {ctx.beginPath();ctx.arc(cx+direction.x*6+(direction.y?side*5:0),cy+direction.y*6+(direction.x?side*5:0),2,0,Math.PI*2);ctx.fill();}
+  if(state==='running') particles.forEach(p=>{p.life-=dt*1.8;p.x+=p.vx*dt;p.y+=p.vy*dt;});
+  particles=particles.filter(p=>p.life>0);particles.forEach(p=>{ctx.globalAlpha=Math.max(0,p.life);ctx.fillStyle='#ffda9d';ctx.fillRect(p.x,p.y,3,3);});ctx.globalAlpha=1;
+}
+function frame(time) {
+  const elapsed = last ? Math.min(time-last,100) : 0; last=time;
+  if(state==='running') {accumulator+=elapsed;while(accumulator>=interval() && state==='running'){accumulator-=interval();step();}}
+  draw(time,elapsed/1000);requestAnimationFrame(frame);
+}
+const keyMap = {ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right',w:'up',s:'down',a:'left',d:'right'};
+document.addEventListener('keydown',event=>{
+  if(event.ctrlKey || event.metaKey || event.altKey) return;
+  const key=event.key.length===1?event.key.toLowerCase():event.key;
+  if(keyMap[key]) {event.preventDefault();if(!event.repeat) turn(keyMap[key]);}
+  else if(key===' ' || key==='p') {
+    // 保留按钮原生的空格激活，避免同一次按键先开始又暂停。
+    if(key===' ' && event.target instanceof HTMLButtonElement) return;
+    event.preventDefault();if(event.repeat)return;if(state==='ready'||state==='over')start();else togglePause();
+  } else if(key==='r' && !event.repeat) start();
+});
+$('play').addEventListener('click',()=>{if(state==='paused')togglePause();else start();$('play').blur();});
+$('pause').addEventListener('click',()=>togglePause());$('restart').addEventListener('click',start);
+document.querySelectorAll('[data-dir]').forEach(button=>button.addEventListener('click',()=>turn(button.dataset.dir)));
+window.addEventListener('blur',()=>{if(state==='running')togglePause();});
+document.addEventListener('visibilitychange',()=>{if(document.hidden && state==='running')togglePause();});
+reset();requestAnimationFrame(frame);
+</script>
+</body>
+</html>
